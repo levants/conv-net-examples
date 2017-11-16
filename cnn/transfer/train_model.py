@@ -139,7 +139,7 @@ def test_model(training_args):
   running_loss = 0.0
   running_corrects = 0
 
-  use_gpu = pyconf.gpu_available()
+  use_gpu = torch.cuda.is_available()
   
   # Iterate over data.
   for data in dataloders[datasets.TEST_PHASE]:
