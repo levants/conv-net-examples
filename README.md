@@ -1,3 +1,3 @@
 # README #
 
-Convolutional neural networks examples
+Convolutional neural network examples
