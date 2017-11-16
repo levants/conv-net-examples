@@ -16,7 +16,7 @@ import torch
 from cnn.transfer import (network_model as networks,
                           dataset_config as datasets)
 
-TATE_DICT_KEY = 'state_dict'
+STATE_DICT_KEY = 'state_dict'
 
 
 def set_flag(model, phase, scheduler):
