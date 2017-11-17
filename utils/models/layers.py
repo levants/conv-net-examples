@@ -10,6 +10,8 @@ from __future__ import division
 from __future__ import print_function
 
 from torch import nn
+import torch
+from torch.autograd import Variable
 
 import numpy as np
 
@@ -17,11 +19,15 @@ import numpy as np
 class Flatten(nn.Module):
   """Module to flatten network layer"""
   
-  def __init__(self, out_dim):
+  def __init__(self, out_dim, input_dim=None):
     super(Flatten, self).__init__()
     self.out_dim = out_dim
+    self.input_dim = input_dim
     self.fc_layer = None
     self._apply_fns = []
+    if self.input_dim:
+      input_rand = Variable(torch.randn(1, input_dim))
+      self.forward(input_rand)
     
   def _apply(self, fn):
     """Saves passed function for initialized linear layer
