@@ -15,7 +15,7 @@ import torch
 
 from cnn.mnist import (training_flags as config, mnist_interface as interface)
 from cnn.mnist.cnn_input_reader import read_input_file
-from cnn.mnist.network_model import LeNetClassic
+from cnn.mnist.network_model import LeNetClassic, LeNet
 
 import io
 
@@ -67,9 +67,9 @@ if __name__ == "__main__":
   flags = config.configure()
   
   global model
-  model = LeNetClassic()
-  # input_rand = Variable(torch.randn(1, 1, 28, 28))
-  # model(input_rand)
+  model = LeNet()
+  #input_rand = Variable(torch.randn(1, 1, 28, 28))
+  #model(input_rand)
   model.load_state_dict(torch.load(flags.weights, map_location=lambda storage, loc: storage))
   model.eval()
   app.run(host=flags.host, port=flags.port, threaded=True)

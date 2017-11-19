@@ -14,7 +14,7 @@ from collections import OrderedDict
 from torch import nn
 
 import torch.nn.functional as F
-from utils.models.layers import Flatten
+from utils.models.flatten import Flatten
 
 
 class LeNetClassic(nn.Module):

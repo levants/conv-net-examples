@@ -14,6 +14,7 @@ import torch
 from torch.autograd import Variable
 
 import numpy as np
+from torch.nn.parameter import Parameter
 
 
 class Flatten(nn.Module):
@@ -23,7 +24,8 @@ class Flatten(nn.Module):
     super(Flatten, self).__init__()
     self.out_dim = out_dim
     self.input_dim = input_dim
-    self.fc_layer = None
+    self.fc_layer = nn.Linear(1, 1)
+    self._no_weights_adjasted = True
     self._apply_fns = []
     if self.input_dim:
       input_rand = Variable(torch.randn(1, input_dim))
@@ -54,10 +56,11 @@ class Flatten(nn.Module):
         x - tensor to calculate total dimension
     """
     
-    if self.fc_layer is None:
+    if self._no_weights_adjasted:
       self.flatten_dim = 0 if x is None else np.prod(x.size()[1:])
       self.fc_layer = nn.Linear(self.flatten_dim, self.out_dim)
       self._apply_postfactum()
+      self._no_weights_adjasted = False
     
   def forward(self, input_tensor):
     """Flattens passed tensor and calculates input dimension
@@ -72,6 +75,39 @@ class Flatten(nn.Module):
     x = self.fc_layer(x)
     
     return x
+  
+  def load_state_dict(self, state_dict):
+      """Copies parameters and buffers from :attr:`state_dict` into
+      this module and its descendants. The keys of :attr:`state_dict` must
+      exactly match the keys returned by this module's :func:`state_dict()`
+      function.
+
+      Arguments:
+          state_dict (dict): A dict containing parameters and
+              persistent buffers.
+      """
+      own_state = self.state_dict()
+      for name, param in state_dict.items():
+          if name not in own_state:
+              raise KeyError('unexpected key "{}" in state_dict'
+                             .format(name))
+          if isinstance(param, Parameter):
+              # backwards compatibility for serialized parameters
+              param = param.data
+              if name == 'fc_layer':
+                self.fc_layer = nn.Linear(self.flatten_dim, self.out_dim)
+                
+          try:
+              own_state[name].copy_(param)
+          except:
+              print('While copying the parameter named {}, whose dimensions in the model are'
+                    ' {} and whose dimensions in the checkpoint are {}, ...'.format(
+                        name, own_state[name].size(), param.size()))
+              raise
+
+      missing = set(own_state.keys()) - set(state_dict.keys())
+      if len(missing) > 0:
+          raise KeyError('missing keys in state_dict: "{}"'.format(missing))
     
   def __repr__(self):
     return self.__class__.__name__ + ' (None -> ' \
