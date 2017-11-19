@@ -38,8 +38,8 @@ def recpgnize():
   with Image.open(io.BytesIO(image_data)) as img:
     img = img.convert("L")  # convert into greyscale
     img = img.point(lambda i: i < 150 and 255)  # better black and white
-    #img = ImageOps.expand(img, border=8, fill=border_color)  # add padding
-    #img.thumbnail((IMAGE_SIZE, IMAGE_SIZE), Image.BILINEAR)  # resize back to the same size
+    img = ImageOps.expand(img, border=8, fill=border_color)  # add padding
+    img.thumbnail((IMAGE_SIZE, IMAGE_SIZE), Image.BILINEAR)  # resize back to the same size
     img.save(_files.data_file('http_img.png'))
     img = Image.fromarray(np.array(img), mode='L')
     resp = interface.run_model(model, img)
@@ -68,8 +68,6 @@ if __name__ == "__main__":
   
   global model
   model = LeNet()
-  #input_rand = Variable(torch.randn(1, 1, 28, 28))
-  #model(input_rand)
   model.load_state_dict(torch.load(flags.weights, map_location=lambda storage, loc: storage))
   model.eval()
   app.run(host=flags.host, port=flags.port, threaded=True)

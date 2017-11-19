@@ -78,9 +78,9 @@ class Flatten(nn.Linear):
     else:
       self.weight = Parameter(torch.Tensor(out_features, in_features))
     if bias:
-        self.bias = Parameter(torch.Tensor(out_features))
+      self.bias = Parameter(torch.Tensor(out_features))
     else:
-        self.register_parameter('bias', None)
+      self.register_parameter('bias', None)
     self.reset_parameters()
     
   def reset_parameters(self):
@@ -99,7 +99,11 @@ class Flatten(nn.Linear):
         current object instance
     """
     
-    self._apply_fns.append(fn)
+    if self.weight is None:
+      self._apply_fns.append(fn)
+    else:
+      super(nn.Linear, self)._apply(fn)
+      
     return self
 
   def _apply_postfactum(self):

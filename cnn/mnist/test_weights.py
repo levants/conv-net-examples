@@ -27,6 +27,7 @@ class TestWeightsLoader(unittest.TestCase):
     """Test case for loading weights in models with Flatten layer"""
     
     model = LeNet()
+    model.cpu()
     weights_dict = torch.load(self.weights, map_location=lambda storage, loc: storage)
     model.load_state_dict(weights_dict)
 
@@ -36,3 +37,4 @@ class TestWeightsLoader(unittest.TestCase):
     model = LeNet()
     input_rand = Variable(torch.randn(1, 1, 28, 28))
     model(input_rand)
+    model.cpu()
