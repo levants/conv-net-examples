@@ -22,6 +22,7 @@ class Flatten(nn.Linear):
   """Flatten layer"""
   
   def __init__(self, out_features, in_features=None, bias=True):
+    super(nn.Linear, self).__init__()
     self.in_features = in_features
     self.out_features = in_features
     if in_features is None:
@@ -36,10 +37,10 @@ class Flatten(nn.Linear):
     self.reset_parameters()
     
   def reset_parameters(self):
-    if self.weight:
-      stdv = 1. / math.sqrt(self.weight.size(1))
+    
+    if self.weight is not None:
       self.weight.data.uniform_(-stdv, stdv)
-    if self.bias is not None:
+      if self.bias is not None:
         self.bias.data.uniform_(-stdv, stdv)
         
   def calculate_total(self, x):
