@@ -17,7 +17,7 @@ from cnn.mnist.cnn_files import files as _files
 
 
 def configure():
-  """Configuration parameters
+  """Configuration parameters reader
     Returns:
       flags - configuration parameters
   """
