@@ -12,10 +12,11 @@ from __future__ import print_function
 import math
 
 from torch import nn
-import torch.nn.functional as F
 import torch
 from torch.nn.parameter import Parameter
+
 import numpy as np
+import torch.nn.functional as F
 
 
 class Flatten(nn.Linear):
@@ -39,6 +40,7 @@ class Flatten(nn.Linear):
   def reset_parameters(self):
     
     if self.weight is not None:
+      stdv = 1. / math.sqrt(self.weight.size(1))
       self.weight.data.uniform_(-stdv, stdv)
       if self.bias is not None:
         self.bias.data.uniform_(-stdv, stdv)
