@@ -51,7 +51,7 @@ class Flatten(nn.Linear):
     if self.weight is None:
       self.in_features = 0 if x is None else np.prod(x.size()[1:])
       self.weight = Parameter(torch.Tensor(self.out_features, self.in_features))
-      self.register_parameter('weight', weight)
+      self.register_parameter('weight', self.weight)
       self.reset_parameters()   
 
   def forward(self, input_tensor):
