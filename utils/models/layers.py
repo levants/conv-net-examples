@@ -12,9 +12,9 @@ from __future__ import print_function
 from torch import nn
 import torch
 from torch.autograd import Variable
+from torch.nn.parameter import Parameter
 
 import numpy as np
-from torch.nn.parameter import Parameter
 
 
 class Flatten(nn.Module):

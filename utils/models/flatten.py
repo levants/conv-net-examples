@@ -19,6 +19,49 @@ import numpy as np
 import torch.nn.functional as F
 
 
+class WeghtData(object):
+  
+  def _set_owner_layer(self, _owner_layer):
+    """Sets this weights owner layer
+      Args:
+        _owner_layer - owner layer of weights
+    """
+    self._owner_layer = _owner_layer
+    
+  def copy_(self, src, async=False, broadcast=True):
+    """Copies the elements from source into this tensor
+      Args:
+        src - source tensor
+        async - flag to copy asynchronous
+        broadcast - flag tu broadcast
+    """
+    if src is None:
+      super(Parameter, self).copy_(src, async=async, broadcast=broadcast)
+    else:
+      self._owner_layer.calculate_total(src)
+      self._owner_layer.weight.data.copy_(src, async=async, broadcast=broadcast)
+
+
+class WeightParameter(Parameter):
+  """Parameter implementation for flatten layer's weights"""
+  
+  def __new__(cls, data=None, requires_grad=True):
+    return super(WeightParameter, cls).__new__(cls, data, requires_grad=requires_grad)
+  
+  def _set_owner_layer(self, _owner_layer):
+    """Sets this weights owner layer
+      Args:
+        _owner_layer - owner layer of weights
+    """
+    
+    self._weight_data = WeghtData()
+    self._weight_data._set_owner_layer(_owner_layer)  
+
+  @property
+  def data(self):
+    return self._weight_data
+
+
 class Flatten(nn.Linear):
   """Flatten layer"""
   
@@ -29,7 +72,9 @@ class Flatten(nn.Linear):
     self._apply_fns = []
     if in_features is None:
       self.weight = None
-      self.register_parameter('weight', None)
+      weight_parameter = WeightParameter()
+      weight_parameter._set_owner_layer(self)
+      self.register_parameter('weight', weight_parameter)
     else:
       self.weight = Parameter(torch.Tensor(out_features, in_features))
     if bias:
@@ -62,6 +107,27 @@ class Flatten(nn.Linear):
     
     for fn in self._apply_fns:
       super(nn.Linear, self)._apply(fn)
+      
+  def _set_input_dim(self, total_dim):
+    """Sets total dimension of input
+      Args:
+        total_dim - total dimension
+    """
+    
+    self.in_features = total_dim
+    self.weight = Parameter(torch.Tensor(self.out_features, self.in_features))
+    self.register_parameter('weight', self.weight)
+    self.reset_parameters()
+    self._apply_postfactum()   
+          
+  def set_total_dim(self, total_dim):
+    """Sets total dimension of tensor
+      Args:
+        total_dim - total dimension
+    """
+    
+    if self.weight is None:
+      self._set_input_dim(total_dim)
         
   def calculate_total(self, x):
     """Calculates total dimension of tensor
@@ -70,11 +136,8 @@ class Flatten(nn.Linear):
     """
     
     if self.weight is None:
-      self.in_features = 0 if x is None else np.prod(x.size()[1:])
-      self.weight = Parameter(torch.Tensor(self.out_features, self.in_features))
-      self.register_parameter('weight', self.weight)
-      self.reset_parameters()
-      self._apply_postfactum()   
+      total_dim = 0 if x is None else np.prod(x.size()[1:])
+      self.set_total_dim(total_dim)
 
   def forward(self, input_tensor):
     
@@ -83,3 +146,4 @@ class Flatten(nn.Linear):
     linear_result = F.linear(x, self.weight, self.bias) 
     
     return linear_result
+
