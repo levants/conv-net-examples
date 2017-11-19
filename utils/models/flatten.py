@@ -24,7 +24,7 @@ class Flatten(nn.Linear):
   def __init__(self, out_features, in_features=None, bias=True):
     super(nn.Linear, self).__init__()
     self.in_features = in_features
-    self.out_features = in_features
+    self.out_features = out_features
     if in_features is None:
       self.weight = None
       self.register_parameter('weight', None)

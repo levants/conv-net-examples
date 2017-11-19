@@ -14,6 +14,7 @@ import unittest
 from cnn.mnist.cnn_files import files as _files
 from cnn.mnist.network_model import LeNet
 import torch
+from torch.autograd.variable import Variable
 
 
 class TestWeightsLoader(unittest.TestCase):
@@ -28,3 +29,10 @@ class TestWeightsLoader(unittest.TestCase):
     model = LeNet()
     weights_dict = torch.load(self.weights, map_location=lambda storage, loc: storage)
     model.load_state_dict(weights_dict)
+
+  def test_run_model(self):
+    """Tests first call of model with flatten layer"""
+    
+    model = LeNet()
+    input_rand = Variable(torch.randn(1, 1, 28, 28))
+    model(input_rand)
