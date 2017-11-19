@@ -26,6 +26,7 @@ class Flatten(nn.Linear):
     super(nn.Linear, self).__init__()
     self.in_features = in_features
     self.out_features = out_features
+    self._apply_fns = []
     if in_features is None:
       self.weight = None
       self.register_parameter('weight', None)
@@ -44,6 +45,23 @@ class Flatten(nn.Linear):
       self.weight.data.uniform_(-stdv, stdv)
       if self.bias is not None:
         self.bias.data.uniform_(-stdv, stdv)
+
+  def _apply(self, fn):
+    """Saves passed function for initialized linear layer
+      Args:
+        fn - functions to apply
+      Returns:
+        current object instance
+    """
+    
+    self._apply_fns.append(fn)
+    return self
+
+  def _apply_postfactum(self):
+    """Applies functions from module"""
+    
+    for fn in self._apply_fns:
+      super(nn.Linear, self)._apply(fn)
         
   def calculate_total(self, x):
     """Calculates total dimension of tensor
@@ -55,7 +73,8 @@ class Flatten(nn.Linear):
       self.in_features = 0 if x is None else np.prod(x.size()[1:])
       self.weight = Parameter(torch.Tensor(self.out_features, self.in_features))
       self.register_parameter('weight', self.weight)
-      self.reset_parameters()   
+      self.reset_parameters()
+      self._apply_postfactum()   
 
   def forward(self, input_tensor):
     
