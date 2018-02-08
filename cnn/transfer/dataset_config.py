@@ -61,7 +61,7 @@ def init_validation_transform():
       Returns:
         chain of transformation functions
     """
-    return transforms.Compose([transforms.Scale(256),
+    return transforms.Compose([transforms.Resize(256),
                                transforms.CenterCrop(224),
                                transforms.ToTensor(),
                                transforms.Normalize([0.485, 0.456, 0.406],
@@ -82,7 +82,7 @@ def init_datasets(flags):
           class_names - class names
     """
 
-    train_transforms = transforms.Compose([transforms.RandomSizedCrop(224),
+    train_transforms = transforms.Compose([transforms.RandomResizedCrop(224),
                                            transforms.RandomHorizontalFlip(),
                                            transforms.ToTensor(),
                                            transforms.Normalize([0.485, 0.456, 0.406],

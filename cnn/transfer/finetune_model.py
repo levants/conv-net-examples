@@ -63,10 +63,6 @@ def run_training(flags):
                      dataloders, dataset_sizes, flags)
     training.train_model(training_args)
     training.test_model(training_args)
-    # visualize_model(renset_model)
-
-    # plt.ioff()
-    # plt.show()
 
     return (class_names, class_to_idx)
 
