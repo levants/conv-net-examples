@@ -1,8 +1,8 @@
 <html>
 <head>
-<title>MNIST</title>
-<!--link rel="stylesheet" type="text/css" href="css/index.css"-->
-<style type="text/css">
+    <title>MNIST</title>
+    <!--link rel="stylesheet" type="text/css" href="css/index.css"-->
+    <style type="text/css">
 .noselect {
 	-webkit-touch-callout: none; /* iOS Safari */
 	-webkit-user-select: none; /* Chrome/Safari/Opera */
@@ -12,11 +12,12 @@
 	user-select: none; /* Non-prefixed version, currently
                                   not supported by any browser */
 }
-</style>
+
+    </style>
 </head>
 <body style="margin: 0; border: 0; padding: 0; background-color: #f0f0f0" class="noselect">
-    <table>
-      <tr>
+<table>
+    <tr>
         <td style="vertical-align: middle">
             <canvas id="canvas" class="noselect" style="margin: 10px; border: 1px solid;"></canvas>
         </td>
@@ -24,8 +25,8 @@
             <table>
                 <tr>
                     <td class="noselect" style="vertical-align: top">
-                        <label >Pen:</label>
-                        <select id="select" style="margin-top: 20px; width: 80px;" >
+                        <label>Pen:</label>
+                        <select id="select" style="margin-top: 20px; width: 80px;">
                             <option value="1">Normal</option>
                             <option value="2">Bold</option>
                         </select>
@@ -33,13 +34,16 @@
                 </tr>
                 <tr>
                     <td style="vertical-align: top">
-                        <button id="button-reset" class="noselect" style="margin-top: 30px; width: 110px; height: 40px; font-size:16px; ">Reset</button>
+                        <button id="button-reset" class="noselect"
+                                style="margin-top: 30px; width: 110px; height: 40px; font-size:16px; ">Reset
+                        </button>
                     </td>
                 </tr>
                 <tr>
                     <td style="vertical-align: middle">
                         <span id="span-dimension"></span>
-                        <canvas id="canvas-result" class="noselect" style="margin-top: 50px; border: 1px solid; margin-left: 10px;"></canvas>
+                        <canvas id="canvas-result" class="noselect"
+                                style="margin-top: 50px; border: 1px solid; margin-left: 10px;"></canvas>
                     </td>
                 </tr>
             </table>
@@ -48,11 +52,12 @@
             <button id="button-result" class="noselect" style="font-size: 40px;">>></button>
         </td>
         <td style="vertical-align: middle">
-            <div id="div-result" class="noselect" style="margin: 10px; text-align: center; vertical-align: middle;"></div>
+            <div id="div-result" class="noselect"
+                 style="margin: 10px; text-align: center; vertical-align: middle;"></div>
         </td>
-      </tr>
-    </table>
-	<script type="text/javascript">
+    </tr>
+</table>
+<script type="text/javascript">
 (function () {
 
 var size = 28
@@ -280,6 +285,7 @@ function showResult () {
 }
 
 })()
-	</script>
+
+</script>
 </body>
 </html>

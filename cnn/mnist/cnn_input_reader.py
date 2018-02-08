@@ -20,18 +20,17 @@ border_color = 'black'
 
 
 def read_input_file(image_data=None):
-	"""Reads image file to tensor
-		Args:
-			image_data - binary image
-		Returns:
-			img_array - array of image pixels
-	"""
-	with Image.open(io.BytesIO(image_data)) as img:
-		img = img.convert("L")  # convert into greyscale
-		img = img.point(lambda i: i < 150 and 255)  # better black and white
-		img = ImageOps.expand(img, border=8, fill=border_color)  # add padding
-		img.thumbnail((IMAGE_SIZE, IMAGE_SIZE), Image.BILINEAR)  # resize back to the same size
-		img.save(_files.data_file('http_img.jpg'))
-		
-		return img
+    """Reads image file to tensor
+        Args:
+            image_data - binary image
+        Returns:
+            img_array - array of image pixels
+    """
+    with Image.open(io.BytesIO(image_data)) as img:
+        img = img.convert("L")  # convert into greyscale
+        img = img.point(lambda i: i < 150 and 255)  # better black and white
+        img = ImageOps.expand(img, border=8, fill=border_color)  # add padding
+        img.thumbnail((IMAGE_SIZE, IMAGE_SIZE), Image.BILINEAR)  # resize back to the same size
+        img.save(_files.data_file('http_img.jpg'))
 
+        return img
